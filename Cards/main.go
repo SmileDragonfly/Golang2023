@@ -2,7 +2,9 @@ package main
 
 func main() {
 	cards := []string{"Ace of Spades", newCard()}
-	println(cards)
+	for i, card := range cards {
+		println(i, card)
+	}
 }
 
 func newCard() string {
