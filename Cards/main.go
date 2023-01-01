@@ -1,11 +1,8 @@
 package main
 
-import "fmt"
-
 func main() {
-	// var card string = "Ace of Spades"
-	card := newCard()
-	fmt.Println(card)
+	cards := []string{"Ace of Spades", newCard()}
+	println(cards)
 }
 
 func newCard() string {
