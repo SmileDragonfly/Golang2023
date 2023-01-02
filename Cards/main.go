@@ -1,10 +1,14 @@
 package main
 
-func main() {
-	cards := deck{"Ace of Spades", newCard()}
-	cards.print()
-}
+import "fmt"
 
-func newCard() string {
-	return "Five of Diamonds"
+func main() {
+	cards := newDeck()
+	hand, remainingCards := deal(cards, 5)
+	fmt.Println("All cards:")
+	cards.print()
+	fmt.Println("Hand:")
+	hand.print()
+	fmt.Println("Remaining cards:")
+	remainingCards.print()
 }
