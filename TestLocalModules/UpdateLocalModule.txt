@@ -1,0 +1,2 @@
+1. Delete require to local module in require
+2. Run go mod tidy
