@@ -7,7 +7,6 @@ import (
 	"crypto/rsa"
 	"crypto/sha1"
 	"crypto/x509"
-	"encoding/base64"
 	"encoding/pem"
 	"log"
 	"os"
@@ -60,9 +59,9 @@ func main() {
 	sha1Data := sha1.Sum(md5Data[:])
 	signatureData, err := rsa.SignPKCS1v15(rand.Reader, pri, crypto.SHA1, sha1Data[:])
 	if err != nil {
-		log.Fatal("Encrypt data failed: ", err.Error())
+		log.Fatal("Signature data failed: ", err.Error())
 	}
-	log.Println("Encrypted data:", base64.StdEncoding.EncodeToString(signatureData))
+	log.Println("Signature data:", signatureData)
 	err = rsa.VerifyPKCS1v15(rsaPubKey, crypto.SHA1, sha1Data[:], signatureData)
 	if err != nil {
 		log.Fatal("Verify signature failed: ", err.Error())
