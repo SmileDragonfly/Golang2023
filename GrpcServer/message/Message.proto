@@ -1,0 +1,25 @@
+syntax ="proto3";
+option go_package="message.proto";
+message LinkRequest{
+  string ClientRequestId=1;
+  string WalletId=2;
+  string Name=3;
+  string NationalId=4;
+  string Phone=5;
+  string SourceNumber=6;
+  string SourceType=7;
+}
+
+message LinkResponse{
+  string ClientRequestId=1;
+  string RequestId=2;
+  string Otp=3;
+  string AuthenType=4;
+  string DeviceId=5;
+  string RequestToken=6;
+  string SourceNumber=7;
+}
+
+service GrpcService {
+  rpc Link(LinkRequest) returns (LinkResponse);
+}
