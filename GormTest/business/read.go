@@ -3,26 +3,25 @@ package business
 import (
 	"context"
 	"gormtest/GormTest/model"
+	"gormtest/GormTest/storage"
 )
 
-type readStorage interface {
-	readWallet(ctx context.Context, data *model.Wallet) error
-	readBank(ctx context.Context, data *model.Bank) error
-	readLinkInfo(ctx context.Context, data *model.LinkInfo) error
-}
-
 type readBiz struct {
-	store readStorage
+	store storage.Storage
 }
 
-func (c readBiz) ReadWallet(ctx context.Context, data *model.Wallet) error {
-	return c.store.readWallet(ctx, data)
+func NewReadBiz(store storage.Storage) readBiz {
+	return readBiz{store: store}
 }
 
-func (c readBiz) readBank(ctx context.Context, data *model.Bank) error {
-	return c.store.readBank(ctx, data)
+func (r readBiz) ReadWallet(ctx context.Context, condition map[string]interface{}) ([]model.Wallet, error) {
+	return r.store.ReadWallet(ctx, condition)
 }
 
-func (c readBiz) readLinkInfo(ctx context.Context, data *model.LinkInfo) error {
-	return c.store.readLinkInfo(ctx, data)
+func (r readBiz) ReadBank(ctx context.Context, condition map[string]interface{}) ([]model.Bank, error) {
+	return r.store.ReadBank(ctx, condition)
+}
+
+func (r readBiz) ReadLinkInfo(ctx context.Context, condition map[string]interface{}) ([]model.LinkInfo, error) {
+	return r.store.ReadLinkInfo(ctx, condition)
 }

@@ -3,26 +3,25 @@ package business
 import (
 	"context"
 	"gormtest/GormTest/model"
+	"gormtest/GormTest/storage"
 )
 
-type updateStorage interface {
-	updateWallet(ctx context.Context, data *model.Wallet) error
-	updateBank(ctx context.Context, data *model.Bank) error
-	updateLinkInfo(ctx context.Context, data *model.LinkInfo) error
-}
-
 type updateBiz struct {
-	store updateStorage
+	store storage.Storage
 }
 
-func (c updateBiz) UpdateWallet(ctx context.Context, data *model.Wallet) error {
-	return c.store.updateWallet(ctx, data)
+func NewUpdateBiz(store storage.Storage) updateBiz {
+	return updateBiz{store: store}
 }
 
-func (c updateBiz) UpdateBank(ctx context.Context, data *model.Bank) error {
-	return c.store.updateBank(ctx, data)
+func (u updateBiz) UpdateWallet(ctx context.Context, condition map[string]interface{}, dataUpdate *model.Wallet) error {
+	return u.store.UpdateWallet(ctx, condition, dataUpdate)
 }
 
-func (c updateBiz) UpdateLinkInfo(ctx context.Context, data *model.LinkInfo) error {
-	return c.store.updateLinkInfo(ctx, data)
+func (u updateBiz) UpdateBank(ctx context.Context, condition map[string]interface{}, dataUpdate *model.Bank) error {
+	return u.store.UpdateBank(ctx, condition, dataUpdate)
+}
+
+func (u updateBiz) UpdateLinkInfo(ctx context.Context, condition map[string]interface{}, dataUpdate *model.LinkInfo) error {
+	return u.store.UpdateLinkInfo(ctx, condition, dataUpdate)
 }

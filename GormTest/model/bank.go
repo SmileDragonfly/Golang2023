@@ -9,3 +9,7 @@ type Bank struct {
 	Code       string    `gorm:"size:8;unique"`
 	Name       string    `gorm:"size:128"`
 }
+
+func (Bank) TableName() string {
+	return "banks"
+}

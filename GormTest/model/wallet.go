@@ -20,3 +20,7 @@ type Wallet struct {
 	Gender       string `gorm:"size:8"`
 	AuthenType   string `gorm:"size:8"`
 }
+
+func (Wallet) TableName() string {
+	return "wallets"
+}

@@ -14,3 +14,7 @@ type LinkInfo struct {
 	BankCard    string `gorm:"size:32"`
 	ResourceID  string `gorm:"size:36"`
 }
+
+func (LinkInfo) TableName() string {
+	return "linkinfos"
+}

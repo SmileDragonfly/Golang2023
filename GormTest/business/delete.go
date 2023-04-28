@@ -2,27 +2,25 @@ package business
 
 import (
 	"context"
-	"gormtest/GormTest/model"
+	"gormtest/GormTest/storage"
 )
 
-type deleteStorage interface {
-	deleteWallet(ctx context.Context, data *model.Wallet) error
-	deleteBank(ctx context.Context, data *model.Bank) error
-	deleteLinkInfo(ctx context.Context, data *model.LinkInfo) error
-}
-
 type deleteBiz struct {
-	store deleteStorage
+	store storage.Storage
 }
 
-func (c deleteBiz) DeleteWallet(ctx context.Context, data *model.Wallet) error {
-	return c.store.deleteWallet(ctx, data)
+func NewDeleteBiz(store storage.Storage) deleteBiz {
+	return deleteBiz{store: store}
 }
 
-func (c deleteBiz) DeleteBank(ctx context.Context, data *model.Bank) error {
-	return c.store.deleteBank(ctx, data)
+func (d deleteBiz) DeleteWallet(ctx context.Context, condition map[string]interface{}) error {
+	return d.store.DeleteWallet(ctx, condition)
 }
 
-func (c deleteBiz) DeleteLinkInfo(ctx context.Context, data *model.LinkInfo) error {
-	return c.store.deleteLinkInfo(ctx, data)
+func (d deleteBiz) DeleteBank(ctx context.Context, condition map[string]interface{}) error {
+	return d.store.DeleteBank(ctx, condition)
+}
+
+func (d deleteBiz) DeleteLinkInfo(ctx context.Context, condition map[string]interface{}) error {
+	return d.store.DeleteLinkInfo(ctx, condition)
 }
