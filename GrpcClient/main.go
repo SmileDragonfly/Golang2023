@@ -18,7 +18,7 @@ func main() {
 	defer conn.Close()
 	client := message_proto.NewGrpcServiceClient(conn)
 	// Contact the server and print out its response.
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(60)*time.Second)
 	defer cancel()
 	req := message_proto.LinkRequest{ClientRequestId: uuid.New().String()}
 	log.Println("Request link:", req)

@@ -14,6 +14,7 @@ func main() {
 	}
 	s := grpc.NewServer()
 	message_proto.RegisterGrpcServiceServer(s, &server{})
+	log.Println("Start Grpc Server")
 	if err := s.Serve(lis); err != nil {
 		log.Fatalln("Server start listening failed:", err.Error())
 	}
