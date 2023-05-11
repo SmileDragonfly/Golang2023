@@ -1,0 +1,14 @@
+I managed to:
+Run sudo apt-get update && sudo apt-get install -yqq daemonize dbus-user-session fontconfig and sudo daemonize /usr/bin/unshare --fork --pid --mount-proc /lib/systemd/systemd --system-unit=basic.target to get systemd working
+Use exec sudo nsenter -m -u -i -n -p -C -r -w -t $(pidof -s systemd) -a su - $LOGNAME to upgrade from 20.04 to 21.04 (had to change from 'lts' to 'normal', it'll give a warning telling you where to change)
+Change it to exec sudo nsenter -m -u -i -n -p -C -r -w -t $(pidof -s systemd) -m -p su - $LOGNAME and then upgrade again from 21.04 to 21.10
+Be sure to backup your VM file though, last time I tried this I had to re-install my entire distro. (We're supposed to update it manually like that, it's on the Store's page)
+Unfortunately we still need that command in order to use snap, even though I read somewhere that supposedly it should be supported on one of the newer Ubuntu versions.
+
+
+1. sudo apt-get update && sudo apt-get install -yqq daemonize dbus-user-session fontconfig
+2. sudo daemonize /usr/bin/unshare --fork --pid --mount-proc /lib/systemd/systemd --system-unit=basic.target
+3. exec sudo nsenter -m -u -i -n -p -C -r -w -t $(pidof -s systemd) -a su - $LOGNAME
+4. exec sudo nsenter -m -u -i -n -p -C -r -w -t $(pidof -s systemd) -m -p su - $LOGNAME
+5. cd /mnt/d/VSProject/Golang2023/SqlcTest/repository/sqlc/postgresql
+6. sqlc generate

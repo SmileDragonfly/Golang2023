@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"crypto"
 	"crypto/md5"
 	"crypto/rand"
@@ -10,15 +9,14 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/google/go-querystring/query"
 	"github.com/google/uuid"
 	"io"
 	"log"
-	"mime/multipart"
 	"net/http"
 	"os"
 	"sort"
+	"strings"
 	"time"
 )
 
@@ -87,11 +85,18 @@ func main() {
 		log.Fatalln(err)
 	}
 	subData.Signature = sSignature
+	PrintIndent(subData)
 	link := "https://cardtest.Sacombank.com.vn:9448/checkout/stbCheckout"
 	//link := "https://87f6-125-235-61-74.ngrok-free.app/return"
 	form, err := query.Values(subData)
-	log.Printf("%+v", form)
-	resp, err := http.PostForm(link, form)
+	log.Printf("Request: %+v", subData)
+	//resp, err := http.PostForm(link, form)
+	hc := http.Client{CheckRedirect: func(req *http.Request, via []*http.Request) error {
+		return http.ErrUseLastResponse
+	}}
+	req, err := http.NewRequest("POST", link, strings.NewReader(form.Encode()))
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	resp, err := hc.Do(req)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -101,7 +106,13 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+	urlRet := "https://cardtest.Sacombank.com.vn:9448/checkout/" + resp.Header.Get("Location")
+	if err != nil {
+		log.Fatalln(err)
+	}
 	log.Println("Subscription Response:", string(respBodyBytes))
+	log.Println("Subscription Url:", urlRet)
+	log.Println("Stop main")
 }
 
 func CreateSignatureMD5(sPrivateKey string, sRawData string) (string, error) {
@@ -216,60 +227,10 @@ func GetStringSign(des SubData) string {
 	return sSigned
 }
 
-func Upload(client *http.Client, url string, values map[string]io.Reader) (err error) {
-	// Prepare a form that you will submit to that URL.
-	var b bytes.Buffer
-	w := multipart.NewWriter(&b)
-	for key, r := range values {
-		var fw io.Writer
-		if x, ok := r.(io.Closer); ok {
-			defer x.Close()
-		}
-		// Add an image file
-		if x, ok := r.(*os.File); ok {
-			if fw, err = w.CreateFormFile(key, x.Name()); err != nil {
-				return
-			}
-		} else {
-			// Add other fields
-			if fw, err = w.CreateFormField(key); err != nil {
-				return
-			}
-		}
-		if _, err = io.Copy(fw, r); err != nil {
-			return err
-		}
-
-	}
-	// Don't forget to close the multipart writer.
-	// If you don't close it, your request will be missing the terminating boundary.
-	w.Close()
-
-	// Now that you have a form, you can submit it to your handler.
-	req, err := http.NewRequest("POST", url, &b)
+func PrintIndent(data any) {
+	byteData, err := json.MarshalIndent(data, "", "    ")
 	if err != nil {
 		return
 	}
-	// Don't forget to set the content type, this will contain the boundary.
-	req.Header.Set("Content-Type", w.FormDataContentType())
-
-	// Submit the request
-	res, err := client.Do(req)
-	if err != nil {
-		return
-	}
-
-	// Check the response
-	if res.StatusCode != http.StatusOK {
-		err = fmt.Errorf("bad status: %s", res.Status)
-	}
-	return
-}
-
-func mustOpen(f string) *os.File {
-	r, err := os.Open(f)
-	if err != nil {
-		panic(err)
-	}
-	return r
+	log.Println(string(byteData))
 }

@@ -14,8 +14,10 @@ func main() {
 		log.Fatalln(err)
 	}
 	db.AutoMigrate(&model.Wallet{}, &model.Bank{}, &model.LinkInfo{})
+	//wallet := model.Wallet{NationalID: "123456789", Mobile: "0358698789", Gender: "Male", Language: "VietNam", UserName: "User1"}
+	//db.Create(&wallet)
 	//db.Create(&Wallet{})
-	//var wallet Wallet
-	//db.First(&wallet, 1)
-	//log.Println(wallet)
+	var wallet model.Wallet
+	db.First(&wallet, 1)
+	log.Println(wallet)
 }
