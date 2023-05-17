@@ -44,12 +44,11 @@ type SubData struct {
 	City                string `json:"City"`
 	PostalCode          string `json:"PostalCode"`
 	Country             string `json:"Country"`
-	//State               string `json:"State"`
-	Mobile    string `json:"Mobile"`
-	Email     string `json:"Email"`
-	CancelUrl string `json:"CancelUrl"`
-	ReturnUrl string `json:"ReturnUrl"`
-	Signature string `json:"Signature"`
+	Mobile              string `json:"Mobile"`
+	Email               string `json:"Email"`
+	CancelUrl           string `json:"CancelUrl"`
+	ReturnUrl           string `json:"ReturnUrl"`
+	Signature           string `json:"Signature"`
 }
 
 func main() {
@@ -88,6 +87,7 @@ func main() {
 	PrintIndent(subData)
 	link := "https://cardtest.Sacombank.com.vn:9448/checkout/stbCheckout"
 	//link := "https://87f6-125-235-61-74.ngrok-free.app/return"
+	//link := "https://cardtest.sacombank.com.vn:9448/vtis/v1/retrieveStepUpMethods"
 	form, err := query.Values(subData)
 	log.Printf("Request: %+v", subData)
 	//resp, err := http.PostForm(link, form)
