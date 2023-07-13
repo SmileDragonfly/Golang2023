@@ -1,0 +1,4 @@
+0.go mod init mocktest --> go mod tidy
+1.go install github.com/golang/mock/mockgen@v1.6.0
+2.go get github.com/golang/mock/mockgen/model
+3.mockgen -package mockdb -destination db/mock/store.go mocktest/db Store

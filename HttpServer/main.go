@@ -7,6 +7,7 @@ import (
 	log "github.com/jeanphorn/log4go"
 	"io"
 	"net/http"
+	"os"
 )
 
 func LinkHandler(respw http.ResponseWriter, r *http.Request) {
@@ -81,6 +82,35 @@ func RequestOTPAccHandler(respw http.ResponseWriter, r *http.Request) {
 	return
 }
 
+func TestMultipartForm(respw http.ResponseWriter, r *http.Request) {
+	log.Info(r.Method)
+	reqHeaderBytes, err := json.Marshal(r.Header)
+	if err != nil {
+		log.Error("Marshal header error")
+		return
+	}
+	log.Info("Header:", string(reqHeaderBytes))
+	err = r.ParseMultipartForm(2 * 10 * 1024 * 1024)
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	frontData := r.MultipartForm.Value["front"]
+	log.Info("Front Data:", frontData)
+	file, err := os.Create("front.png")
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	_, err = file.Write([]byte(frontData[0]))
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	file.Close()
+	return
+}
+
 func main() {
 	// Init log file
 	// load config file, it's optional
@@ -91,6 +121,7 @@ func main() {
 	defer log.Close()
 	http.HandleFunc("/Link", LinkHandler)
 	http.HandleFunc("/RequestOTPAcc", RequestOTPAccHandler)
+	http.HandleFunc("/test-multipartform", TestMultipartForm)
 	err := http.ListenAndServe(":9000", nil)
 	if err != nil {
 		log.Error(err.Error())

@@ -18,15 +18,15 @@ func (s studenterImpl) Create(name string) student {
 
 type maleStudent struct {
 	student
-	studenterImpl
+	studenter
 	gender string
 }
 
 func main() {
 	stu := maleStudent{
-		student:       student{},
-		studenterImpl: studenterImpl{},
-		gender:        "male",
+		student:   student{},
+		studenter: studenterImpl{},
+		gender:    "male",
 	}
 	fmt.Println(stu.Create("dat"))
 }
